@@ -6,11 +6,14 @@ A faixa tem só uma barra e os valores no fim, por exemplo `161k / 1M · 16%`. E
 
 ## As cores
 
-| Uso da janela | Cor da barra e da borda |
+A cor segue o tamanho da conversa em tokens, e não o percentual da janela:
+
+| Tamanho da conversa | Cor da barra e da borda |
 |---|---|
-| abaixo de 70% | cinza |
-| de 70% a 89% | laranja |
-| 90% ou mais | vermelho |
+| abaixo de 400k | cinza |
+| de 400k a 599k | amarelo |
+| de 600k a 799k | laranja |
+| 800k ou mais | vermelho |
 
 Antes da primeira resposta de um chat novo, ou logo depois de um `/compact`, a faixa mostra "aguardando a primeira resposta" e `? / 1M`.
 
@@ -18,7 +21,7 @@ O plugin não mostra mensagens nem avisos: só a barra muda de cor.
 
 ## Os cortes são configuráveis
 
-Os percentuais de 70% e 90% são as opções `corteAlerta` e `corteCritico`, perguntadas na instalação. Um par inválido (fora de 1 a 100, ou o crítico que não fica acima do alerta) volta para 70 e 90.
+Os três cortes são as opções `corteAmarelo`, `corteLaranja` e `corteVermelho`, em milhares de tokens (400, 600 e 800), perguntadas na instalação. Um trio inválido (algum valor zero ou negativo, ou fora da ordem amarelo, laranja, vermelho) volta para 400, 600 e 800.
 
 ## Instalação
 

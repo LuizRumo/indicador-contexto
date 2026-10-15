@@ -2,23 +2,29 @@
 
 import type { Leitura } from '../types'
 
-export type Estado = 'normal' | 'alerta' | 'critico'
-export type Cortes = { alerta: number; critico: number }
+export type Estado = 'normal' | 'amarelo' | 'laranja' | 'vermelho'
+/** Os cortes em tokens: a partir de cada um, a faixa troca de cor. */
+export type Cortes = { amarelo: number; laranja: number; vermelho: number }
 
-export const CORTES_PADRAO: Cortes = { alerta: 70, critico: 90 }
+export const CORTES_PADRAO: Cortes = { amarelo: 400_000, laranja: 600_000, vermelho: 800_000 }
 
-/** Lê os cortes do userConfig; par inválido (fora de 1 a 100, ou crítico não acima do alerta) volta ao padrão. */
+/**
+ * Lê os cortes do userConfig, em milhares de tokens (400 vale 400k). Trio inválido
+ * (algum não positivo, ou fora da ordem amarelo < laranja < vermelho) volta ao padrão.
+ */
 export function cortesDe(opcoes: Readonly<Record<string, unknown>>): Cortes {
-  const alerta = Number(opcoes.corteAlerta ?? CORTES_PADRAO.alerta)
-  const critico = Number(opcoes.corteCritico ?? CORTES_PADRAO.critico)
+  const amarelo = Number(opcoes.corteAmarelo ?? CORTES_PADRAO.amarelo / 1_000) * 1_000
+  const laranja = Number(opcoes.corteLaranja ?? CORTES_PADRAO.laranja / 1_000) * 1_000
+  const vermelho = Number(opcoes.corteVermelho ?? CORTES_PADRAO.vermelho / 1_000) * 1_000
   const valido =
-    Number.isFinite(alerta) && Number.isFinite(critico) && alerta >= 1 && critico <= 100 && critico > alerta
-  return valido ? { alerta, critico } : CORTES_PADRAO
+    [amarelo, laranja, vermelho].every(Number.isFinite) && amarelo > 0 && laranja > amarelo && vermelho > laranja
+  return valido ? { amarelo, laranja, vermelho } : CORTES_PADRAO
 }
 
-export function estadoDe(percentual: number, cortes: Cortes): Estado {
-  if (percentual >= cortes.critico) return 'critico'
-  if (percentual >= cortes.alerta) return 'alerta'
+export function estadoDe(tokens: number, cortes: Cortes): Estado {
+  if (tokens >= cortes.vermelho) return 'vermelho'
+  if (tokens >= cortes.laranja) return 'laranja'
+  if (tokens >= cortes.amarelo) return 'amarelo'
   return 'normal'
 }
 

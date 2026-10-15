@@ -8,8 +8,9 @@ const leitura = atom({ plugin: 'indicador-contexto', key: 'leitura' } as const, 
 
 const CORES = {
   normal: { borda: 'subtle', barra: '#6f7072' },
-  alerta: { borda: '#FF8200', barra: '#FF8200' },
-  critico: { borda: '#e0533d', barra: '#e0533d' },
+  amarelo: { borda: '#E8B400', barra: '#E8B400' },
+  laranja: { borda: '#FF8200', barra: '#FF8200' },
+  vermelho: { borda: '#e0533d', barra: '#e0533d' },
 } as const
 
 /** A barra do esboço: 6 px de altura, cantos arredondados, trilho cinza translúcido. */
@@ -64,7 +65,7 @@ export const register: Register = (on, options) => {
     const { Box, Text } = $.ui.resolve(e)
     const numero = textoNumero(atual)
 
-    if (atual.percentual === null) {
+    if (atual.percentual === null || atual.tokens === null) {
       return (
         <Box key="faixa" borderStyle="round" borderColor={CORES.normal.borda} paddingX={1} gap={1}>
           <Box flexGrow={1}>
@@ -77,7 +78,7 @@ export const register: Register = (on, options) => {
       )
     }
 
-    const estado = estadoDe(atual.percentual, cortes)
+    const estado = estadoDe(atual.tokens, cortes)
     const cor = CORES[estado]
     const emDestaque = estado !== 'normal'
 

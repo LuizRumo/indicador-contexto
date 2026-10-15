@@ -74,14 +74,22 @@ describe('sem avisos', () => {
     expect(avisos.length).toBe(0)
   })
 
-  test('com cortes 50 e 80, a cor muda em 55% e em 81%', { options: { corteAlerta: 50, corteCritico: 80 } }, async ($, on) => {
+  test('com cortes 100k, 200k e 300k, a cor muda em cada um', { options: { corteAmarelo: 100, corteLaranja: 200, corteVermelho: 300 } }, async ($, on) => {
+    preparar(on)
+    await medir($, 9)
+    expect((await faixaEm($, 'terminal')).corNumero).toBe(undefined)
+    await medir($, 10)
+    expect((await faixaEm($, 'terminal')).corNumero).toBe('#E8B400')
+    await medir($, 20)
+    expect((await faixaEm($, 'terminal')).corNumero).toBe('#FF8200')
+    await medir($, 30)
+    expect((await faixaEm($, 'terminal')).corNumero).toBe('#e0533d')
+  })
+
+  test('cortes fora de ordem voltam para 400k, 600k e 800k', { options: { corteAmarelo: 700, corteLaranja: 600, corteVermelho: 800 } }, async ($, on) => {
     preparar(on)
     await medir($, 45)
-    expect((await faixaEm($, 'terminal')).corNumero).toBe(undefined)
-    await medir($, 55)
-    expect((await faixaEm($, 'terminal')).corNumero).toBe('#FF8200')
-    await medir($, 81)
-    expect((await faixaEm($, 'terminal')).corNumero).toBe('#e0533d')
+    expect((await faixaEm($, 'terminal')).corNumero).toBe('#E8B400')
   })
 })
 
@@ -102,23 +110,22 @@ describe('faixa acima do prompt', () => {
         expect(String(faixa.desenho?.source)).toContain('width="450"')
       }
 
-      await medir($, 69)
-      faixa = await faixaEm($, superficie)
-      expect(faixa.dica).toBe(undefined)
-
-      await medir($, 70)
-      faixa = await faixaEm($, superficie)
-      expect(faixa.numero).toBe('700k / 1M · 70%')
-      expect(faixa.dica).toBe(undefined)
-
-      await medir($, 89)
-      faixa = await faixaEm($, superficie)
-      expect(faixa.dica).toBe(undefined)
-
-      await medir($, 90)
-      faixa = await faixaEm($, superficie)
-      expect(faixa.numero).toBe('900k / 1M · 90%')
-      expect(faixa.dica).toBe(undefined)
+      // A cor segue os tokens: cinza abaixo de 400k, amarelo, laranja a partir de 600k, vermelho a partir de 800k.
+      const cores: [number, string | undefined][] = [
+        [39, undefined],
+        [40, '#E8B400'],
+        [59, '#E8B400'],
+        [60, '#FF8200'],
+        [79, '#FF8200'],
+        [80, '#e0533d'],
+      ]
+      for (const [percentual, cor] of cores) {
+        await medir($, percentual)
+        faixa = await faixaEm($, superficie)
+        expect(faixa.corNumero).toBe(cor)
+        expect(faixa.dica).toBe(undefined)
+      }
+      expect(faixa.numero).toBe('800k / 1M · 80%')
     })
 
     test(`sem medição mostra o texto de espera (${superficie})`, async ($, on) => {

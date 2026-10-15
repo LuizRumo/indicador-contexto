@@ -1,5 +1,6 @@
 {
   "name": "indicador-contexto",
+  "description": "Faixa acima do campo de mensagem com o uso da janela de contexto da conversa.",
   "owner": { "name": "Luiz Eduardo Oliveira" },
   "plugins": [{ "name": "indicador-contexto", "source": "./" }]
 }

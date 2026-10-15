@@ -1,0 +1,5 @@
+{
+  "name": "indicador-contexto",
+  "owner": { "name": "Luiz Eduardo Oliveira" },
+  "plugins": [{ "name": "indicador-contexto", "source": "./" }]
+}

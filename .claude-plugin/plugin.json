@@ -1,0 +1,23 @@
+{
+  "name": "indicador-contexto",
+  "version": "0.1.0",
+  "description": "Faixa acima do campo de mensagem com o uso da janela de contexto desta conversa.",
+  "author": {
+    "name": "Luiz Eduardo Oliveira"
+  },
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "corteAlerta": {
+      "type": "number",
+      "title": "Corte de alerta (%)",
+      "description": "Percentual da janela de contexto a partir do qual a faixa fica laranja.",
+      "default": 70
+    },
+    "corteCritico": {
+      "type": "number",
+      "title": "Corte crítico (%)",
+      "description": "Percentual da janela de contexto a partir do qual a faixa fica vermelha.",
+      "default": 90
+    }
+  }
+}

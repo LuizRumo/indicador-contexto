@@ -25,7 +25,7 @@ Os três cortes são as opções `corteAmarelo`, `corteLaranja` e `corteVermelho
 
 ## Instalação
 
-O repositório é privado: quem instala precisa ter acesso a ele e estar logado no GitHub.
+O repositório é público: qualquer pessoa pode instalar, sem convite.
 
 Rode no terminal, dentro de uma sessão do `claude`:
 
